@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="chrome-extension://mgijmfgdpljgnhcmokgeokdibogckgoj/injectIneligible.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,84 +79,9 @@
     <div class="container" id="rickroll">
         <h1>You've Been Rickrolled!</h1>
         <div class="video-container">
-            <video id="rickroll-video" autoplay loop controls>
-                <source src="https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <video controls="" autoplay="" name="media"><source src="https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4" type="video/mp4"></video>
         </div>
         <p>Never gonna give you up, never gonna let you down!</p>
     </div>
-    
-    <script>
-        // Function to create confetti effect
-        function createConfetti() {
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = getRandomColor();
-                confetti.style.animationDelay = Math.random() * 5 + 's';
-                document.body.appendChild(confetti);
-            }
-        }
-        
-        function getRandomColor() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Create confetti as soon as page loads
-        createConfetti();
-        
-        // Try to ensure autoplay with sound
-        window.onload = function() {
-            const video = document.getElementById('rickroll-video');
-            
-            // Set volume to maximum
-            video.volume = 1.0;
-            
-            // Try to autoplay
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    // Autoplay started successfully
-                    console.log("Autoplay successful!");
-                }).catch(error => {
-                    // Autoplay was prevented
-                    console.log("Autoplay prevented, trying after user interaction");
-                    
-                    // Try to play after any user interaction
-                    document.addEventListener('click', function() {
-                        video.play();
-                        video.volume = 1.0;
-                    }, { once: true });
-                    
-                    document.addEventListener('touchstart', function() {
-                        video.play();
-                        video.volume = 1.0;
-                    }, { once: true });
-                });
-            }
-        };
-        
-        // Attempt to maximize volume and ensure playing
-        document.addEventListener('visibilitychange', function() {
-            if (!document.hidden) {
-                const video = document.getElementById('rickroll-video');
-                video.play();
-                video.volume = 1.0;
-            }
-        });
-        
-        // Try to play video if user interacts with the page in any way
-        ['click', 'touchstart', 'keydown'].forEach(event => {
-            document.addEventListener(event, function() {
-                const video = document.getElementById('rickroll-video');
-                video.play();
-                video.volume = 1.0;
-            }, { once: true });
-        });
-    </script>
 </body>
 </html>
