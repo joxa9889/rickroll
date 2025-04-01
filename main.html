@@ -53,7 +53,84 @@
     <div class="container" id="rickroll">
         <h1>You've Been Rickrolled!</h1>
         <div>
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff0000;
+            margin: 20px 0;
+        }
+        .rickroll-image {
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="rickroll">
+        <h1>You've Been Rickrolled!</h1>
+        <div>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=TBK1hrBPt-iPu8dM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let seconds = 0;
+            const countdownElement = document.getElementById('countdown');
+            
+            // Update countdown timer
+            const countdownInterval = setInterval(function() {
+                seconds--;
+                countdownElement.textContent = seconds;
+                
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
         </div>
     </div>
 
