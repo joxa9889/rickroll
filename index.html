@@ -9,230 +9,54 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background-color: 
+#f5f5f5;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
             text-align: center;
-            overflow-x: hidden;
         }
         .container {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            max-width: 800px;
+            max-width: 600px;
             width: 90%;
         }
         h1 {
-            color: #ff3e3e;
-            font-size: 36px;
-            margin-bottom: 20px;
-            animation: dance 1s infinite alternate;
-        }
-        @keyframes dance {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-10px) rotate(3deg); }
+            color: #333;
         }
         p {
-            color: #333;
+            color: #666;
             line-height: 1.6;
             font-size: 18px;
-        }
-        .video-container {
-            position: relative;
-            width: 100%;
-            max-width: 560px;
-            margin: 20px auto;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .fake-button {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 20px 0;
-            transition: all 0.3s;
-        }
-        .fake-button:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            animation: confetti-fall 5s linear infinite;
-            z-index: -1;
-        }
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-        .hidden {
-            display: none;
+            font-weight: bold;
         }
         .countdown {
-            font-size: 48px;
+            font-size: 24px;
             font-weight: bold;
-            color: #ff3e3e;
-            margin: 30px 0;
+            color: 
+#ff0000;
+            margin: 20px 0;
         }
-        .dancing-rick {
-            max-width: 150px;
-            position: fixed;
-            bottom: 20px;
-            animation: slide-in 3s forwards, bounce 2s infinite;
-            display: none;
-        }
-        @keyframes slide-in {
-            from { right: -150px; }
-            to { right: 20px; }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        #audioControl {
-            position: absolute;
-            opacity: 0;
-            bottom: 0;
-            right: 0;
-            width: 1px;
-            height: 1px;
+        .rickroll-image {
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
         }
     </style>
 </head>
-<body onclick="attemptAutoplay()">
-    <div class="container" id="initial-content">
-        <h1>Important Information</h1>
-        <p>Click anywhere to continue:</p>
-        <div class="countdown" id="countdown">1</div>
-        <div class="fake-button" id="reveal-button">Click Here</div>
-    </div>
-    
-    <div class="container hidden" id="rickroll">
+<body>
+    <div class="container" id="rickroll">
         <h1>You've Been Rickrolled!</h1>
-        <div class="video-container" id="video-container">
-            <!-- We'll add the iframe dynamically with JavaScript -->
+        <div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=TBK1hrBPt-iPu8dM&autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="autoplay;" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        <p>Never gonna give you up, never gonna let you down!</p>
-        <audio id="audioControl" loop>
-            <source src="https://github.com/fesnt/rickroll-project/raw/master/src/audio/rickroll.mp3" type="audio/mpeg">
-        </audio>
     </div>
-    
-    <img src="/api/placeholder/150/200" alt="Dancing Rick" class="dancing-rick" id="dancing-rick">
-    
-    <script>
-        // Try multiple methods to achieve autoplay
-        let hasInteracted = false;
-        let audio = document.getElementById('audioControl');
-        
-        // Set up event listeners for any interaction
-        document.addEventListener('click', attemptAutoplay);
-        document.addEventListener('touchstart', attemptAutoplay);
-        document.addEventListener('keydown', attemptAutoplay);
-        document.addEventListener('mousemove', attemptAutoplay);
-        
-        // Start countdown immediately but make it shorter
-        let count = 1;
-        const countdownEl = document.getElementById('countdown');
-        const interval = setInterval(() => {
-            count--;
-            countdownEl.textContent = count;
-            if (count <= 0) {
-                clearInterval(interval);
-                revealRickroll();
-            }
-        }, 500);
-        
-        // Also trigger on button click
-        document.getElementById('reveal-button').addEventListener('click', revealRickroll);
-        
-        function attemptAutoplay() {
-            if (!hasInteracted) {
-                hasInteracted = true;
-                revealRickroll();
-                
-                // Try to play audio (backup method)
-                try {
-                    audio.play();
-                    audio.volume = 1.0;
-                } catch(e) {
-                    console.log('Audio autoplay failed:', e);
-                }
-            }
-        }
-        
-        function revealRickroll() {
-            document.getElementById('initial-content').classList.add('hidden');
-            document.getElementById('rickroll').classList.remove('hidden');
-            document.getElementById('dancing-rick').style.display = 'block';
-            createConfetti();
-            
-            // Add the iframe dynamically after user interaction
-            const videoContainer = document.getElementById('video-container');
-            const iframe = document.createElement('iframe');
-            iframe.width = "560";
-            iframe.height = "315";
-            iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
-            iframe.title = "YouTube video player";
-            iframe.frameBorder = "0";
-            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-            iframe.allowFullscreen = true;
-            videoContainer.appendChild(iframe);
-            
-            // Try multiple methods to play and maximize volume
-            try {
-                window.focus();
-                audio.volume = 1.0;
-                audio.play();
-                
-                // Try to send messages to the iframe
-                setTimeout(() => {
-                    try {
-                        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                        iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
-                    } catch(e) {
-                        console.log('Could not control video through postMessage:', e);
-                    }
-                }, 1000);
-            } catch(e) {
-                console.log('Autoplay error:', e);
-            }
-        }
-        
-        function createConfetti() {
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = getRandomColor();
-                confetti.style.animationDelay = Math.random() * 5 + 's';
-                document.body.appendChild(confetti);
-            }
-        }
-        
-        function getRandomColor() {
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Attempt autoplay on scroll as well
-        window.addEventListener('scroll', attemptAutoplay);
-        
-        // Attempt autoplay after a short delay
-        setTimeout(attemptAutoplay, 500);
-    </script>
 </body>
 </html>
