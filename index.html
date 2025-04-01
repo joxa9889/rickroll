@@ -100,13 +100,11 @@
             <video id="rickrollVideo" controls autoplay muted loop playsinline>
                 <source src="https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4" type="video/mp4">
             </video>
-            <div class="unmute-message" id="unmuteMessage">If audio doesn't start automatically, click anywhere!</div>
         </div>
         <p>Never gonna give you up, never gonna let you down!</p>
     </div>
 
     <script>
-        // Create confetti particles
         for (let i = 0; i < 50; i++) {
             createConfetti();
         }
@@ -119,7 +117,6 @@
             confetti.style.backgroundColor = getRandomColor();
             document.body.appendChild(confetti);
             
-            // Remove confetti after animation completes
             setTimeout(() => {
                 confetti.remove();
                 createConfetti();
@@ -131,56 +128,42 @@
             return colors[Math.floor(Math.random() * colors.length)];
         }
         
-        // Multiple autoplay strategies
         window.onload = function() {
             const video = document.getElementById('rickrollVideo');
             const unmuteMessage = document.getElementById('unmuteMessage');
-            
-            // Strategy 1: Try direct autoplay with sound
+    
             try {
                 video.muted = false;
                 const playPromise = video.play();
                 
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        // Successfully playing with sound!
                         unmuteMessage.style.display = 'none';
                     }).catch(error => {
-                        // Direct autoplay with sound failed (expected)
-                        console.log("Direct autoplay failed, trying simulated user interaction");
                         
-                        // Strategy 2: Start muted autoplay
                         video.muted = true;
                         video.play();
                         
-                        // Strategy 3: Simulate user interaction after a brief delay
                         setTimeout(() => {
-                            // Create and trigger a synthetic click event
                             const clickEvent = new MouseEvent('click', {
                                 view: window,
                                 bubbles: true,
                                 cancelable: true
                             });
                             
-                            // Dispatch the click event on the document body
                             document.body.dispatchEvent(clickEvent);
                             
-                            // Also try programmatic unmuting after "user interaction"
                             video.muted = false;
                             
-                            // Try various audio context methods to unblock audio
                             try {
-                                // Create audio context
                                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                                 if (AudioContext) {
                                     const audioCtx = new AudioContext();
                                     
-                                    // Resume audio context
                                     if (audioCtx.state === 'suspended') {
                                         audioCtx.resume();
                                     }
                                     
-                                    // Create a silent oscillator to "unlock" audio
                                     const oscillator = audioCtx.createOscillator();
                                     oscillator.frequency.value = 0; // Silent
                                     oscillator.connect(audioCtx.destination);
@@ -190,53 +173,32 @@
                             } catch (e) {
                                 console.log("Audio context approach failed", e);
                             }
-                            
-                            // Hide message if we think we've succeeded
                             setTimeout(() => {
                                 if (!video.muted) {
                                     unmuteMessage.style.display = 'none';
                                 }
                             }, 500);
-                        }, 500); // Small delay before simulating click
+                        }, 500); 
                     });
                 }
             } catch(e) {
-                // Fallback to muted autoplay if all else fails
                 console.log("Exception in autoplay attempt", e);
                 video.muted = true;
                 video.play();
             }
         };
-        
-        // Function to unmute video after user interaction
+   
         function unmuteVideo() {
             const video = document.getElementById('rickrollVideo');
             const unmuteMessage = document.getElementById('unmuteMessage');
             
-            // Try to unmute and play
             video.muted = false;
-            
-            // Try to get media session
+ 
             if (navigator.mediaSession) {
                 navigator.mediaSession.setActionHandler('play', () => {
                     video.play();
                 });
             }
-            
-            <!-- video.play()
-                .then(() => {
-                    // Successfully unmuted
-                    unmuteMessage.style.display = 'none';
-                })
-                .catch(error => {
-                    // Still couldn't unmute, keep trying
-                    console.log("Couldn't unmute on explicit click: ", error);
-                    // Try once more after a short delay
-                    setTimeout(() => {
-                        video.muted = false;
-                        video.play().catch(e => console.log("Final unmute attempt failed"));
-                    }, 100);
-                }); -->
         }
     </script>
 </body>
