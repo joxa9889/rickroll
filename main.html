@@ -111,24 +111,6 @@
             <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?si=TBK1hrBPt-iPu8dM&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let seconds = 0;
-            const countdownElement = document.getElementById('countdown');
-            
-            // Update countdown timer
-            const countdownInterval = setInterval(function() {
-                seconds--;
-                countdownElement.textContent = seconds;
-                
-                if (seconds <= 0) {
-                    clearInterval(countdownInterval);
-                    window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-                }
-            }, 1000);
-        });
-    </script>
 </body>
 </html>
         </div>
