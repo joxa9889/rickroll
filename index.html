@@ -100,7 +100,6 @@
             <video id="rickrollVideo" controls autoplay muted loop playsinline>
                 <source src="https://ia801509.us.archive.org/10/items/Rick_Astley_Never_Gonna_Give_You_Up/Rick_Astley_Never_Gonna_Give_You_Up.mp4" type="video/mp4">
             </video>
-            <div class="unmute-message" id="unmuteMessage">If audio doesn't start automatically, click anywhere!</div>
         </div>
         <p>Never gonna give you up, never gonna let you down!</p>
     </div>
@@ -132,7 +131,7 @@
         window.onload = function() {
             const video = document.getElementById('rickrollVideo');
             const unmuteMessage = document.getElementById('unmuteMessage');
-            
+    
             try {
                 video.muted = false;
                 const playPromise = video.play();
@@ -141,7 +140,6 @@
                     playPromise.then(() => {
                         unmuteMessage.style.display = 'none';
                     }).catch(error => {
-                        console.log("Direct autoplay failed, trying simulated user interaction");
                         
                         video.muted = true;
                         video.play();
@@ -152,6 +150,7 @@
                                 bubbles: true,
                                 cancelable: true
                             });
+                            
                             document.body.dispatchEvent(clickEvent);
                             
                             video.muted = false;
@@ -174,13 +173,12 @@
                             } catch (e) {
                                 console.log("Audio context approach failed", e);
                             }
-                            
                             setTimeout(() => {
                                 if (!video.muted) {
                                     unmuteMessage.style.display = 'none';
                                 }
                             }, 500);
-                        }, 500);
+                        }, 500); 
                     });
                 }
             } catch(e) {
@@ -189,12 +187,13 @@
                 video.play();
             }
         };
+   
         function unmuteVideo() {
             const video = document.getElementById('rickrollVideo');
             const unmuteMessage = document.getElementById('unmuteMessage');
-           
+            
             video.muted = false;
-           
+ 
             if (navigator.mediaSession) {
                 navigator.mediaSession.setActionHandler('play', () => {
                     video.play();
