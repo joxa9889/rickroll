@@ -200,18 +200,6 @@
                     video.play();
                 });
             }
-            
-            video.play()
-                .then(() => {
-                    unmuteMessage.style.display = 'none';
-                })
-                .catch(error => {
-                    console.log("Couldn't unmute on explicit click: ", error);
-                    setTimeout(() => {
-                        video.muted = false;
-                        video.play().catch(e => console.log("Final unmute attempt failed"));
-                    }, 100);
-                });
         }
     </script>
 </body>
