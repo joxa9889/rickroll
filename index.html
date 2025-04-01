@@ -102,29 +102,50 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
         }
+        #audioControl {
+            position: absolute;
+            opacity: 0;
+            bottom: 0;
+            right: 0;
+            width: 1px;
+            height: 1px;
+        }
     </style>
 </head>
-<body>
+<body onclick="attemptAutoplay()">
     <div class="container" id="initial-content">
         <h1>Important Information</h1>
-        <p>Click the button below to view important information:</p>
-        <div class="countdown" id="countdown">3</div>
+        <p>Click anywhere to continue:</p>
+        <div class="countdown" id="countdown">1</div>
         <div class="fake-button" id="reveal-button">Click Here</div>
     </div>
     
     <div class="container hidden" id="rickroll">
         <h1>You've Been Rickrolled!</h1>
-        <div class="video-container">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-container" id="video-container">
+            <!-- We'll add the iframe dynamically with JavaScript -->
         </div>
         <p>Never gonna give you up, never gonna let you down!</p>
+        <audio id="audioControl" loop>
+            <source src="https://github.com/fesnt/rickroll-project/raw/master/src/audio/rickroll.mp3" type="audio/mpeg">
+        </audio>
     </div>
     
     <img src="/api/placeholder/150/200" alt="Dancing Rick" class="dancing-rick" id="dancing-rick">
     
     <script>
-        // Start countdown immediately
-        let count = 3;
+        // Try multiple methods to achieve autoplay
+        let hasInteracted = false;
+        let audio = document.getElementById('audioControl');
+        
+        // Set up event listeners for any interaction
+        document.addEventListener('click', attemptAutoplay);
+        document.addEventListener('touchstart', attemptAutoplay);
+        document.addEventListener('keydown', attemptAutoplay);
+        document.addEventListener('mousemove', attemptAutoplay);
+        
+        // Start countdown immediately but make it shorter
+        let count = 1;
         const countdownEl = document.getElementById('countdown');
         const interval = setInterval(() => {
             count--;
@@ -133,10 +154,25 @@
                 clearInterval(interval);
                 revealRickroll();
             }
-        }, 1000);
+        }, 500);
         
         // Also trigger on button click
         document.getElementById('reveal-button').addEventListener('click', revealRickroll);
+        
+        function attemptAutoplay() {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                revealRickroll();
+                
+                // Try to play audio (backup method)
+                try {
+                    audio.play();
+                    audio.volume = 1.0;
+                } catch(e) {
+                    console.log('Audio autoplay failed:', e);
+                }
+            }
+        }
         
         function revealRickroll() {
             document.getElementById('initial-content').classList.add('hidden');
@@ -144,12 +180,35 @@
             document.getElementById('dancing-rick').style.display = 'block';
             createConfetti();
             
-            // Try to maximize volume (note: browser policies restrict this without user interaction)
+            // Add the iframe dynamically after user interaction
+            const videoContainer = document.getElementById('video-container');
+            const iframe = document.createElement('iframe');
+            iframe.width = "560";
+            iframe.height = "315";
+            iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0";
+            iframe.title = "YouTube video player";
+            iframe.frameBorder = "0";
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            videoContainer.appendChild(iframe);
+            
+            // Try multiple methods to play and maximize volume
             try {
-                const iframe = document.querySelector('iframe');
-                iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+                window.focus();
+                audio.volume = 1.0;
+                audio.play();
+                
+                // Try to send messages to the iframe
+                setTimeout(() => {
+                    try {
+                        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                        iframe.contentWindow.postMessage('{"event":"command","func":"setVolume","args":[100]}', '*');
+                    } catch(e) {
+                        console.log('Could not control video through postMessage:', e);
+                    }
+                }, 1000);
             } catch(e) {
-                console.log('Could not control volume due to browser restrictions');
+                console.log('Autoplay error:', e);
             }
         }
         
@@ -168,6 +227,12 @@
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+        
+        // Attempt autoplay on scroll as well
+        window.addEventListener('scroll', attemptAutoplay);
+        
+        // Attempt autoplay after a short delay
+        setTimeout(attemptAutoplay, 500);
     </script>
 </body>
 </html>
