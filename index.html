@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="chrome-extension://mgijmfgdpljgnhcmokgeokdibogckgoj/injectIneligible.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -126,79 +127,6 @@
         function getRandomColor() {
             const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
             return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        window.onload = function() {
-            const video = document.getElementById('rickrollVideo');
-            const unmuteMessage = document.getElementById('unmuteMessage');
-    
-            try {
-                video.muted = false;
-                const playPromise = video.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        unmuteMessage.style.display = 'none';
-                    }).catch(error => {
-                        
-                        video.muted = true;
-                        video.play();
-                        
-                        setTimeout(() => {
-                            const clickEvent = new MouseEvent('click', {
-                                view: window,
-                                bubbles: true,
-                                cancelable: true
-                            });
-                            
-                            document.body.dispatchEvent(clickEvent);
-                            
-                            video.muted = false;
-                            
-                            try {
-                                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                                if (AudioContext) {
-                                    const audioCtx = new AudioContext();
-                                    
-                                    if (audioCtx.state === 'suspended') {
-                                        audioCtx.resume();
-                                    }
-                                    
-                                    const oscillator = audioCtx.createOscillator();
-                                    oscillator.frequency.value = 0; // Silent
-                                    oscillator.connect(audioCtx.destination);
-                                    oscillator.start(0);
-                                    oscillator.stop(0.001);
-                                }
-                            } catch (e) {
-                                console.log("Audio context approach failed", e);
-                            }
-                            setTimeout(() => {
-                                if (!video.muted) {
-                                    unmuteMessage.style.display = 'none';
-                                }
-                            }, 500);
-                        }, 500); 
-                    });
-                }
-            } catch(e) {
-                console.log("Exception in autoplay attempt", e);
-                video.muted = true;
-                video.play();
-            }
-        };
-   
-        function unmuteVideo() {
-            const video = document.getElementById('rickrollVideo');
-            const unmuteMessage = document.getElementById('unmuteMessage');
-            
-            video.muted = false;
- 
-            if (navigator.mediaSession) {
-                navigator.mediaSession.setActionHandler('play', () => {
-                    video.play();
-                });
-            }
         }
     </script>
 </body>
